@@ -17,3 +17,9 @@ type StateType = {
     error?: string
 
 }
+
+interface FetchedDataType {
+    translations: {
+        text: string
+    }[]
+}
