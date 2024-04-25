@@ -10,11 +10,6 @@ const initialState: StateType = {
 }
 
 
-
-
-
-
-
 const rootSlice = createSlice({
     name: 'root',
     initialState,

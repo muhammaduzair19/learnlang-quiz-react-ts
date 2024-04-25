@@ -1,12 +1,17 @@
 import { Button, Container, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { saveResult } from "../redux/slices"
 
 const Quiz = () => {
     const [result, setResult] = useState<string[]>([])
     const [count, setCount] = useState<number>(0)
     const [ans, setAns] = useState<string>('')
     const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const { loading, words, error } = useSelector((state: { root: StateType }) => state.root);
+
 
 
 
@@ -16,6 +21,11 @@ const Quiz = () => {
         setAns('')
     }
 
+    useEffect(() => {
+        if (count + 1 > words.length) navigate('/result')
+        dispatch(saveResult(result))
+    }, [result])
+
 
     return (
         <Container
@@ -23,12 +33,12 @@ const Quiz = () => {
             sx={{
                 padding: '1rem'
             }}>
-                
+
             <Typography m={'2rem 0'}>
                 QUIZ
             </Typography>
             <Typography variant="h3">
-                {count + 1} - {'Randoms'}
+                {count + 1} - {words[count]?.word}
             </Typography>
             <FormControl>
                 <FormLabel
@@ -40,13 +50,17 @@ const Quiz = () => {
                     Meaning
                 </FormLabel>
                 <RadioGroup value={ans} onChange={(e) => setAns(e.target.value)}>
-                    <FormControlLabel
-                        value={'lol'}
-                        control={<Radio />}
-                        label="option 1"
-                    >
+                    {
+                        words[count]?.options.map((i, idx) => (
+                            <FormControlLabel
+                                value={i}
+                                control={<Radio />}
+                                label={i}
+                                key={idx}
+                            />
+                        ))
+                    }
 
-                    </FormControlLabel>
 
                 </RadioGroup>
             </FormControl>
@@ -59,7 +73,7 @@ const Quiz = () => {
                 onClick={nextHandler}
                 disabled={ans === ''}
             >
-                {count === 7 ? 'Submit' : "Next"}
+                {count === words.length - 1 ? 'Submit' : "Next"}
             </Button>
         </Container>
     )
