@@ -29,8 +29,6 @@ const Learning = () => {
 
 
     useEffect(() => {
-        console.log(params);
-
         dispatch(getWordRequest())
         translateWords(params)
             .then((arr) => dispatch(getWordSucces(arr)))
